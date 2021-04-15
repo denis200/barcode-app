@@ -13,7 +13,6 @@ export default function HomeScreen({ navigation }) {
          <Text onPress={()=>{navigation.navigate('Login')}}style={styles.button}>Вход</Text>
           <Text style={styles.orText}>или</Text>
           <Text onPress={()=>{navigation.navigate('Reg')}}style={styles.button}>Регистрация</Text>
-          
         </View>
         
       </ImageBackground>
