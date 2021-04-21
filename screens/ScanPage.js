@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-export default function ScanScreen({navigation,onSubmit}) {
+export default function ScanScreen({route,navigation}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [text,setText] = useState()
-
-
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -19,15 +17,15 @@ export default function ScanScreen({navigation,onSubmit}) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
    setText(data);
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text>Запрос разрешения камеры</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>Нет доступа к камере!</Text>;
   }
 
   return (
@@ -36,8 +34,12 @@ export default function ScanScreen({navigation,onSubmit}) {
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => {setScanned(false)}} />}
-      <Button title = 'Назад' onPress={() => {navigation.navigate('Goods',{data:"How are you?"})}}></Button>
+      {scanned && <TouchableOpacity style = {styles.againButton} onPress={() => {setScanned(false)}} >
+        <Text style = {{textAlign:'center'}} >Нажмите,чтобы отсканировать снова</Text>
+        </TouchableOpacity >}
+      <TouchableOpacity style={styles.backButton}  onPress={() => {navigation.navigate('Goods',{data: text})}}>
+        <Text style = {{textAlign:'center'}}>Назад</Text>
+      </TouchableOpacity >
     </View>
   );
 }
@@ -48,4 +50,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  backButton:{
+    borderWidth:2,
+    paddingVertical:13,
+    backgroundColor:'#00aaff',
+    borderRadius: 16,
+    marginHorizontal:20,
+    marginBottom: -600,
+    
+  },
+  againButton:{
+    borderWidth:2,
+    paddingVertical:13,
+    backgroundColor:'#00aaff',
+    borderRadius: 16,
+    marginHorizontal:20,
+  }
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View,ScrollView,Image ,useEffect} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, useEffect } from 'react-native';
 import App from '../App';
 import Good from '../components/good';
 import GoodsArray from '../components/goods-array';
@@ -11,72 +11,97 @@ import { useIsFocused } from '@react-navigation/native'
 
 
 
-export default function GoodsScreen({navigation}) {
+export default function GoodsScreen({ route, navigation }) {
 
-    const [goods,setGoods] = useState([])
-    const [count,setCount] = useState(0)
-    const [sum,setSum] = useState(0)
-    const addGood = ()=>{
-        setGoods(prev => [...prev,{
-        name:'Простоквашино',
-        price: 45.99,
-        image: require('.././images/prosto.jpg')}])
-        setCount(count+1)
-        setSum(sum+45.99)
+  const [goods, setGoods] = useState([])
+  const [count, setCount] = useState(0)
+  const [sum, setSum] = useState(0)
+  const [isTransition, setTransition] = useState(false)
+  const addGood = (data) => {
+    setGoods(prev => [...prev, {
+      name: data,
+      price: 45.99,
+      image: require('.././images/prosto.jpg')
+    }])
+    setCount(count + 1)
+    setSum(sum + 45.99)
+  }
+  const rightWord = (count) => {
+    switch (count) {
+      case 2:
+        return ' товара'
+      case 3:
+        return ' товара'
+      case 4:
+        return ' товара'
+      case 1:
+        return ' товар'
+      default:
+        return ' товаров'
+
     }
-    return (
-    <View style ={styles.screen}>
+  }
+  React.useEffect(() => {
+    if (route.params?.data) {
+      addGood(route.params?.data)
+    }
+  }, [route.params?.data]);
+  return (
+    <View style={styles.screen}>
       <View>
         <Text style={styles.content} >Текущий список:</Text>
-        <Text style={{marginLeft:30,fontSize: 18}}>{count} товаров</Text>
+        <Text style={{ marginLeft: 30, fontSize: 18 }}>{count + rightWord(count)}</Text>
       </View>
-      
-      <ScrollView style = {{height:350,marginTop:20,marginHorizontal:20}}>
-          {goods.map(good =>{return <Good name={good.name} price = {good.price} image = {good.image}></Good>})}
-      </ScrollView>
-      
-      <Text onPress={()=> {navigation.navigate('Scan')}} style ={styles.scanButton}>Отсканировать товар</Text>
-      
-      <View style={{flexDirection:'row',marginTop:50,marginRight:30}}>
-        <Text style = {{fontSize:25,marginLeft:30,flexGrow:1}}>Итого:</Text>
-        <Text style = {{fontSize:25}}>{sum} Р</Text>
+      <View style={{ height: '42%' }}>
+        <ScrollView style={{ marginTop: 20, marginHorizontal: 30, }}>
+          {goods.map(good => { return <Good name={good.name} price={good.price} image={good.image}></Good> })}
+        </ScrollView>
       </View>
-      <Text onPress={addGood} style ={styles.payButton}>Оплатить</Text>
+      <Text onPress={() => { navigation.navigate('Scan') }} style={styles.scanButton}>Отсканировать товар</Text>
+
+      <View style={{ flexDirection: 'row', marginTop: 80, marginRight: 30 }}>
+        <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
+        <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
+      </View>
+      <Text style={styles.payButton}>Оплатить</Text>
 
     </View>
-    
+
   );
 }
 
 const styles = StyleSheet.create({
-    screen:{
-        backgroundColor: '#fff',
-    },
-  payButton:{
-    marginTop:20,
-    textAlign:'center',
-    borderWidth:2,
-    color:'#fff',
-    backgroundColor:'#00aa00',
-    borderColor:'#00aa00',
-    paddingVertical:13,
-    borderRadius:17,
-    marginHorizontal:30,
+  screen: {
+    backgroundColor: '#fff',
+    height: '100%',
   },
-  scanButton:{
-    marginTop:25,
-    textAlign:'center',
-    borderWidth:2,
-    color:'#00aa00',
-    borderColor:'#00aa00',
-    paddingVertical:13,
-    borderRadius:17,
-    marginHorizontal:30,
+  payButton: {
+    marginTop: 15,
+    textAlign: 'center',
+    borderWidth: 2,
+    color: '#fff',
+    backgroundColor: '#00aa00',
+    borderColor: '#00aa00',
+    paddingVertical: 10,
+    borderRadius: 17,
+    marginHorizontal: 30,
+    fontSize: 20,
+  },
+  scanButton: {
+    marginTop: 40,
+    textAlign: 'center',
+    borderWidth: 2,
+    color: '#00aa00',
+    borderColor: '#00aa00',
+    paddingVertical: 10,
+    borderRadius: 17,
+    marginHorizontal: 30,
+    fontSize: 20,
   },
   content: {
-    textAlign:'center',
-    marginTop:30,
-    fontSize:25,
+    textAlign: 'center',
+    marginTop: 50,
+    fontSize: 25,
     marginBottom: 40,
 
   },

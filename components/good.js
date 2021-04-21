@@ -3,7 +3,7 @@ import { StyleSheet, Text, View,ScrollView,Image } from 'react-native';
 
 const Good = (props)=>{
  return(
-     <View style ={{flexDirection:'row',marginTop:10,}}>
+     <View style ={{flexDirection:'row',marginTop:5,borderWidth:1,borderRadius:20,marginHorizontal:2,paddingHorizontal:3,}}>
          <Image source ={props.image} style ={styles.good}></Image>
          <View>
              <Text style = {{marginTop:4,fontSize: 18,marginLeft:20,}}>{props.name}</Text>
@@ -16,7 +16,6 @@ const Good = (props)=>{
 }
 const styles = StyleSheet.create({
     good:{
-      
       width: 80,
       height: 100,
       resizeMode: 'contain'
