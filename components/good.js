@@ -6,8 +6,8 @@ const Good = (props)=>{
      <View style ={{flexDirection:'row',marginTop:10,}}>
          <Image source ={props.image} style ={styles.good}></Image>
          <View>
-             <Text style = {{marginTop:4,fontSize: 18}}>{props.name}</Text>
-             <Text style = {{marginTop:10,marginLeft:5,fontSize:18,color: '#00aa00'}}>{props.price}</Text>
+             <Text style = {{marginTop:4,fontSize: 18,marginLeft:20,}}>{props.name}</Text>
+             <Text style = {{marginTop:10,marginLeft:20,fontSize:18,color: '#00aa00'}}>{props.price}</Text>
          </View>
          
          
@@ -17,7 +17,7 @@ const Good = (props)=>{
 const styles = StyleSheet.create({
     good:{
       
-      width: 100,
+      width: 80,
       height: 100,
       resizeMode: 'contain'
     },

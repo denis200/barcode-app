@@ -17,7 +17,7 @@ export default function RegScreen({ navigation }) {
             <CheckBox ></CheckBox>
             <Text style = {{fontSize:16}}>Даю согласие на обработку персональных данных</Text>
         </View>
-        <TouchableOpacity style ={styles.buttonReg}>
+        <TouchableOpacity onPress ={()=>{navigation.navigate('Login')}}style ={styles.buttonReg}>
             <Text style ={{textAlign:'center',color:'#fff',fontSize:18}}>Зарегистрироваться</Text>
         </TouchableOpacity>
       </View>
