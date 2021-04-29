@@ -12,7 +12,7 @@ export default function LoginScreen({ navigation }) {
         <TextInput  placeholder= "Пароль" maxLength={25} autoCorrect={false} secureTextEntry={true} style = {styles.inputPass}></TextInput>
         
         <TouchableOpacity style ={styles.buttonAuth}>
-            <Text onPress={()=>{navigation.navigate('Goods')}} style ={{textAlign:'center',color:'#fff',fontSize:18}}>Войти</Text>
+            <Text onPress={()=>{navigation.navigate('GoodsTab')}} style ={{textAlign:'center',color:'#fff',fontSize:18}}>Войти</Text>
         </TouchableOpacity>
       </View>
     );

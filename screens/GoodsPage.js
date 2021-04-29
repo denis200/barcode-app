@@ -1,15 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, useEffect } from 'react-native';
-import App from '../App';
 import Good from '../components/good';
-import GoodsArray from '../components/goods-array';
-import ScanScreen from './ScanPage';
-import { useIsFocused } from '@react-navigation/native'
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 
 
+
+const Tab = createBottomTabNavigator();
 
 export default function GoodsScreen({ route, navigation }) {
 
@@ -19,12 +19,12 @@ export default function GoodsScreen({ route, navigation }) {
   const [isTransition, setTransition] = useState(false)
   const addGood = (data) => {
     setGoods(prev => [...prev, {
-      name: data,
-      price: 45.99,
+      name: data.Name,
+      price: data.Price,  
       image: require('.././images/prosto.jpg')
     }])
     setCount(count + 1)
-    setSum(sum + 45.99)
+    setSum(sum + data.Price)
   }
   const rightWord = (count) => {
     switch (count) {
@@ -45,6 +45,7 @@ export default function GoodsScreen({ route, navigation }) {
     if (route.params?.data) {
       addGood(route.params?.data)
     }
+    
   }, [route.params?.data]);
   return (
     <View style={styles.screen}>
@@ -57,14 +58,14 @@ export default function GoodsScreen({ route, navigation }) {
           {goods.map(good => { return <Good name={good.name} price={good.price} image={good.image}></Good> })}
         </ScrollView>
       </View>
-      <Text onPress={() => { navigation.navigate('Scan') }} style={styles.scanButton}>Отсканировать товар</Text>
+      <Text onPress={() => { navigation.navigate('Сканировать') }} style={styles.scanButton}>Отсканировать товар</Text>
 
       <View style={{ flexDirection: 'row', marginTop: 80, marginRight: 30 }}>
         <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
         <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
       </View>
       <Text style={styles.payButton}>Оплатить</Text>
-
+     
     </View>
 
   );

@@ -12,13 +12,24 @@ export default function ScanScreen({route,navigation}) {
       setHasPermission(status === 'granted');
     })();
   }, []);
+  const GetGoodInfo = (barcode) => {
+    fetch('https://qrcodeback.azurewebsites.net/api/Test?QR='+barcode)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      var Name = data.name
+      var Price = data.price
+      navigation.navigate('Корзина',{data:{Name,Price}}) 
+    });
+  }
  
-
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     
-    alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
-   setText(data);
+    //alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
+    setText(data);
+    GetGoodInfo(data)
   };
 
   if (hasPermission === null) {
@@ -35,11 +46,8 @@ export default function ScanScreen({route,navigation}) {
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && <TouchableOpacity style = {styles.againButton} onPress={() => {setScanned(false)}} >
-        <Text style = {{textAlign:'center'}} >Нажмите,чтобы отсканировать снова</Text>
+        <Text style = {{textAlign:'center',color:'#fff'}} >Нажмите,чтобы отсканировать снова</Text>
         </TouchableOpacity >}
-      <TouchableOpacity style={styles.backButton}  onPress={() => {navigation.navigate('Goods',{data: text})}}>
-        <Text style = {{textAlign:'center'}}>Назад</Text>
-      </TouchableOpacity >
     </View>
   );
 }
@@ -62,8 +70,10 @@ const styles = StyleSheet.create({
   againButton:{
     borderWidth:2,
     paddingVertical:13,
-    backgroundColor:'#00aaff',
+    backgroundColor: '#00aa00',
     borderRadius: 16,
     marginHorizontal:20,
+    marginBottom: -600,
+    borderColor: '#00aa00'
   }
 });
