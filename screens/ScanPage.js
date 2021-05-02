@@ -27,7 +27,7 @@ export default function ScanScreen({route,navigation}) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     
-    //alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
+    alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
     setText(data);
     GetGoodInfo(data)
   };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, useEffect } from 'react-native';
+import { StyleSheet, Text, View, ScrollView,FlatList, Image, useEffect } from 'react-native';
 import Good from '../components/good';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -26,6 +26,9 @@ export default function GoodsScreen({ route, navigation }) {
     setCount(count + 1)
     setSum(sum + data.Price)
   }
+  const deleteHandler = index=> {
+    setGoods(goods.filter((item, i) => i!== index));
+  };
   const rightWord = (count) => {
     switch (count) {
       case 2:
@@ -41,6 +44,13 @@ export default function GoodsScreen({ route, navigation }) {
 
     }
   }
+  const deleteItem = (index,price) =>{
+     const arr = [...goods]
+     arr.splice(index,1)
+     setGoods(arr)
+     setCount(count-1)
+     setSum(sum - price)
+  }
   React.useEffect(() => {
     if (route.params?.data) {
       addGood(route.params?.data)
@@ -55,7 +65,7 @@ export default function GoodsScreen({ route, navigation }) {
       </View>
       <View style={{ height: '42%' }}>
         <ScrollView style={{ marginTop: 20, marginHorizontal: 30, }}>
-          {goods.map(good => { return <Good name={good.name} price={good.price} image={good.image}></Good> })}
+          {goods.map(good => { return <Good name={good.name} price={good.price} image={good.image} handleDelete ={()=>deleteItem(good.index,good.price)} ></Good> })}
         </ScrollView>
       </View>
       <Text onPress={() => { navigation.navigate('Сканировать') }} style={styles.scanButton}>Отсканировать товар</Text>
@@ -64,7 +74,7 @@ export default function GoodsScreen({ route, navigation }) {
         <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
         <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
       </View>
-      <Text style={styles.payButton}>Оплатить</Text>
+      <Text style={styles.payButton} onPress={() => { deleteHandler(0)}}>Оплатить</Text>
      
     </View>
 
