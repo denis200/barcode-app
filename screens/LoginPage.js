@@ -6,7 +6,6 @@ import { TextInput } from 'react-native-gesture-handler';
 export default function LoginScreen({ navigation }) {
     return (
       <View >
-        
         <Text style = {{fontSize:24,textAlign:'center',marginTop:'70%'}}>Добро пожаловать!</Text>
         <TextInput placeholder = "Email" maxLength={32} autoCorrect={false} style = {styles.inputLogin}></TextInput>
         <TextInput  placeholder= "Пароль" maxLength={25} autoCorrect={false} secureTextEntry={true} style = {styles.inputPass}></TextInput>

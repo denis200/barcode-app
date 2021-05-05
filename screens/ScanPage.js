@@ -5,7 +5,8 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 export default function ScanScreen({route,navigation}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [text,setText] = useState()
+  const [text,setText] = useState("")
+  const quantity = 1
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -13,22 +14,21 @@ export default function ScanScreen({route,navigation}) {
     })();
   }, []);
   const GetGoodInfo = (barcode) => {
-    fetch('https://qrcodeback.azurewebsites.net/api/Test?QR='+barcode)
+    fetch(`https://qrcodeback.azurewebsites.net/api/ProductQrcode?QR=${barcode}`)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       var Name = data.name
       var Price = data.price
-      navigation.navigate('Корзина',{data:{Name,Price}}) 
+      navigation.navigate('Корзина',{data:{Name,Price,barcode,quantity}}) 
     });
   }
  
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    
-    alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
     setText(data);
+    alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
     GetGoodInfo(data)
   };
 

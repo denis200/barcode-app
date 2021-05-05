@@ -5,10 +5,6 @@ import Good from '../components/good';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-
-
-
-
 const Tab = createBottomTabNavigator();
 
 export default function GoodsScreen({ route, navigation }) {
@@ -16,19 +12,26 @@ export default function GoodsScreen({ route, navigation }) {
   const [goods, setGoods] = useState([])
   const [count, setCount] = useState(0)
   const [sum, setSum] = useState(0)
-  const [isTransition, setTransition] = useState(false)
+  const [isFound,setFound] = useState(false)
+  const [quantityname, setQuantityname] = useState("")
   const addGood = (data) => {
+    let isFind = goods.find(good => good.code === data.barcode)
+    
+    if(isFind === undefined){
     setGoods(prev => [...prev, {
       name: data.Name,
       price: data.Price,  
-      image: require('.././images/prosto.jpg')
+      image: require('.././images/prosto.jpg'),
+      code: data.barcode,
+      quantity: 1,
     }])
     setCount(count + 1)
     setSum(sum + data.Price)
-  }
-  const deleteHandler = index=> {
-    setGoods(goods.filter((item, i) => i!== index));
-  };
+  }else{
+    goods.map(obj=>(obj.code===data.barcode?addItem(obj.quantity,obj.code,obj.price):obj))
+    
+  }}
+  
   const rightWord = (count) => {
     switch (count) {
       case 2:
@@ -44,13 +47,32 @@ export default function GoodsScreen({ route, navigation }) {
 
     }
   }
-  const deleteItem = (index,price) =>{
-     const arr = [...goods]
-     arr.splice(index,1)
-     setGoods(arr)
-     setCount(count-1)
-     setSum(sum - price)
+
+  const findcode = (code) =>{
+    goods.map(obj=>(obj.code===code?(addItem(obj.quantity,obj.name,obj.price)):obj));
+    setFound(true)
+    alert(`Я тут ----- ${isFound}`)
   }
+
+  const deleteItem = (code,price,quantity) =>{
+     const arr = [...goods]
+     let delArr = arr.filter(item => item.code !== code );
+     setGoods(delArr)
+     setCount(count-1)
+     setSum(sum - price*quantity)
+  }
+  const addItem = (quantity,code,price) =>{
+    alert("Я тут ебана рот")
+    setSum(sum + price)
+    setGoods(goods.map(obj=>(obj.code===code?{...obj, quantity:quantity+1 }:obj)))
+    
+  }
+  const delete1Item = (quantity,name,code,price)=> {
+    setGoods(goods.map(obj=>(obj.code===code?{...obj, quantity:quantity-1 }:obj)))
+    if(quantity ==1){deleteItem(code,price,quantity)}
+    setSum(sum - price)
+    
+  };
   React.useEffect(() => {
     if (route.params?.data) {
       addGood(route.params?.data)
@@ -65,7 +87,9 @@ export default function GoodsScreen({ route, navigation }) {
       </View>
       <View style={{ height: '42%' }}>
         <ScrollView style={{ marginTop: 20, marginHorizontal: 30, }}>
-          {goods.map(good => { return <Good name={good.name} price={good.price} image={good.image} handleDelete ={()=>deleteItem(good.index,good.price)} ></Good> })}
+          {goods.map(good => { return <Good key={good.code} name={good.name} price={good.price} image={good.image}  quantity = {good.quantity}
+           handleAdd1 = {()=>addItem(good.quantity,good.code,good.price)} handle1Delete ={()=>delete1Item(good.quantity,good.name,good.code,good.price)} 
+           handleDelete ={()=>deleteItem(good.code,good.price,good.quantity)} ></Good> })}
         </ScrollView>
       </View>
       <Text onPress={() => { navigation.navigate('Сканировать') }} style={styles.scanButton}>Отсканировать товар</Text>

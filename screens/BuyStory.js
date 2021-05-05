@@ -4,15 +4,28 @@ import { StyleSheet, Text, View ,TouchableOpacity,Image} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Good from '../components/good';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const  Purchase = (props)=>{
   const [showList, setShowList] = useState(false)
+  const [name,setName] = useState('chevron-down-circle-outline')
   return(
     <View>
-      <TouchableOpacity onPress={()=>{showList?setShowList(false):setShowList(true)}} style = {{borderWidth:2,borderColor:'#00aa00', paddingVertical:10,marginTop:20,marginHorizontal:30,borderRadius:14,}}>
-        <Text style ={{textAlign:'center',fontSize:16}}>Покупка {props.date}  {props.time}</Text>
-        {showList && props.goods.map(good => { return <Good name={good.name} price={good.price} image={good.image}></Good> })}
+      <TouchableOpacity onPress={()=>{showList?(setShowList(false),setName('chevron-down-circle-outline')):(setShowList(true),setName('chevron-up-circle-outline'))}} style = {{flexDirection:'row', borderWidth:2,borderColor:'#00aa00', paddingVertical:10,marginTop:10,marginHorizontal:30,borderRadius:14,}}>
+        <Text style ={{flex:1,marginLeft:20,fontSize:16}}>Покупка {props.date}  {props.time}</Text>
+        <Ionicons style = {{marginRight:20,}} name={name} size = {25} />
       </TouchableOpacity>
+        <View style ={{marginHorizontal:30,marginTop:1,}}>
+          {showList && props.goods.map(good => { return <Good name={good.name} price={good.price} image={good.image}></Good> })}
+          { showList && 
+          <View style={{ flexDirection: 'row', marginRight: 10,marginBottom:20,marginTop:10, }}>
+            <Text style={{ fontSize: 21, marginLeft: 10, flexGrow: 1 }}>Итого:</Text>
+            <Text style={{ fontSize: 21 }}>350.23 руб.</Text>
+          </View>}
+          
+        </View>
+    
+      
     </View>
   )}
 
@@ -39,13 +52,12 @@ export default function StoryScreen({ route, navigation }) {
   
   ]
     return(
-        
         <View>
             <Text style ={{textAlign:'center',fontSize:24,marginTop:50,}}>История покупок:</Text>
-            <ScrollView style = {{height:'88%',}}>
+            
+            <ScrollView style = {{height:'88%',marginTop:25,}}>
                {PurchaseHistory.map(purch => { return <Purchase date ={purch.date} time = {purch.time} goods = {purch.goods} ></Purchase> })}  
             </ScrollView>
-            
         </View>
 
     )

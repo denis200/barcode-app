@@ -24,11 +24,18 @@ const Good = (props)=>{
      >
          <View style ={{flexDirection:'row',marginTop:5}}>
          <Image source ={props.image} style ={styles.good}></Image>
-         <View>
-             <Text style = {{marginTop:4,fontSize: 18,marginLeft:20,}}>{props.name}</Text>
-             <Text style = {{marginTop:10,marginLeft:20,fontSize:18,color: '#00aa00'}}>{props.price}</Text>
+         <View >
+             <View style = {{marginTop:10}}>
+                <Text style = {{marginTop:4,fontSize: 21,marginLeft:20,}}>{props.name}</Text>
+             </View>
+             <View style ={{flexDirection:'row',marginTop:10,marginLeft:20}}>
+                <Ionicons onPress={props.handle1Delete} name={'remove-circle-outline'} size = {30}></Ionicons>
+                <Text style = {{fontSize:18,marginTop:3}}> {props.quantity} шт </Text>
+                <Ionicons onPress = {props.handleAdd1} name={'add-circle-outline'} size = {30}></Ionicons>
+                <Text style = {{fontSize:20,color: '#000000',marginTop:3,marginLeft:50}}>{props.price}</Text>    
+             </View>
+             
          </View>
-         
      </View>
      </Swipeable>
      
