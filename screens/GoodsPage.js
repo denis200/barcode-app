@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView,FlatList, Image, useEffect } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect } from 'react-native';
 import Good from '../components/good';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,26 +12,27 @@ export default function GoodsScreen({ route, navigation }) {
   const [goods, setGoods] = useState([])
   const [count, setCount] = useState(0)
   const [sum, setSum] = useState(0)
-  const [isFound,setFound] = useState(false)
+  const [isFound, setFound] = useState(false)
   const [quantityname, setQuantityname] = useState("")
   const addGood = (data) => {
     let isFind = goods.find(good => good.code === data.barcode)
-    
-    if(isFind === undefined){
-    setGoods(prev => [...prev, {
-      name: data.Name,
-      price: data.Price,  
-      image: require('.././images/prosto.jpg'),
-      code: data.barcode,
-      quantity: 1,
-    }])
-    setCount(count + 1)
-    setSum(sum + data.Price)
-  }else{
-    goods.map(obj=>(obj.code===data.barcode?addItem(obj.quantity,obj.code,obj.price):obj))
-    
-  }}
-  
+
+    if (isFind === undefined) {
+      setGoods(prev => [...prev, {
+        name: data.Name,
+        price: data.Price,
+        image: require('.././images/prosto.jpg'),
+        code: data.barcode,
+        quantity: data.quantity,
+      }])
+      setCount(count + 1)
+      setSum(sum + data.Price * data.quantity)
+    } else {
+      goods.map(obj => (obj.code === data.barcode ? addItem(obj.quantity, obj.code, obj.price, data.quantity) : obj))
+
+    }
+  }
+
   const rightWord = (count) => {
     switch (count) {
       case 2:
@@ -48,36 +49,35 @@ export default function GoodsScreen({ route, navigation }) {
     }
   }
 
-  const findcode = (code) =>{
-    goods.map(obj=>(obj.code===code?(addItem(obj.quantity,obj.name,obj.price)):obj));
+  const findcode = (code) => {
+    goods.map(obj => (obj.code === code ? (addItem(obj.quantity, obj.name, obj.price)) : obj));
     setFound(true)
     alert(`Я тут ----- ${isFound}`)
   }
 
-  const deleteItem = (code,price,quantity) =>{
-     const arr = [...goods]
-     let delArr = arr.filter(item => item.code !== code );
-     setGoods(delArr)
-     setCount(count-1)
-     setSum(sum - price*quantity)
+  const deleteItem = (code, price, quantity) => {
+    const arr = [...goods]
+    let delArr = arr.filter(item => item.code !== code);
+    setGoods(delArr)
+    setCount(count - 1)
+    setSum(sum - price * quantity)
   }
-  const addItem = (quantity,code,price) =>{
-    alert("Я тут ебана рот")
-    setSum(sum + price)
-    setGoods(goods.map(obj=>(obj.code===code?{...obj, quantity:quantity+1 }:obj)))
-    
+  const addItem = (quantity, code, price, actQuantity) => {
+    setSum(sum + price * actQuantity)
+    setGoods(goods.map(obj => (obj.code === code ? { ...obj, quantity: quantity + actQuantity } : obj)))
+
   }
-  const delete1Item = (quantity,name,code,price)=> {
-    setGoods(goods.map(obj=>(obj.code===code?{...obj, quantity:quantity-1 }:obj)))
-    if(quantity ==1){deleteItem(code,price,quantity)}
+  const delete1Item = (quantity, name, code, price) => {
+    setGoods(goods.map(obj => (obj.code === code ? { ...obj, quantity: quantity - 1 } : obj)))
+    if (quantity == 1) { deleteItem(code, price, quantity) }
     setSum(sum - price)
-    
+
   };
   React.useEffect(() => {
     if (route.params?.data) {
       addGood(route.params?.data)
     }
-    
+
   }, [route.params?.data]);
   return (
     <View style={styles.screen}>
@@ -87,9 +87,11 @@ export default function GoodsScreen({ route, navigation }) {
       </View>
       <View style={{ height: '42%' }}>
         <ScrollView style={{ marginTop: 20, marginHorizontal: 30, }}>
-          {goods.map(good => { return <Good key={good.code} name={good.name} price={good.price} image={good.image}  quantity = {good.quantity}
-           handleAdd1 = {()=>addItem(good.quantity,good.code,good.price)} handle1Delete ={()=>delete1Item(good.quantity,good.name,good.code,good.price)} 
-           handleDelete ={()=>deleteItem(good.code,good.price,good.quantity)} ></Good> })}
+          {goods.map(good => {
+            return <Good key={good.code} name={good.name} price={good.price} image={good.image} quantity={good.quantity}
+              handleAdd1={() => addItem(good.quantity, good.code, good.price)} handle1Delete={() => delete1Item(good.quantity, good.name, good.code, good.price)}
+              handleDelete={() => deleteItem(good.code, good.price, good.quantity)} ></Good>
+          })}
         </ScrollView>
       </View>
       <Text onPress={() => { navigation.navigate('Сканировать') }} style={styles.scanButton}>Отсканировать товар</Text>
@@ -98,8 +100,8 @@ export default function GoodsScreen({ route, navigation }) {
         <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
         <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
       </View>
-      <Text style={styles.payButton} onPress={() => { deleteHandler(0)}}>Оплатить</Text>
-     
+      <Text style={styles.payButton} onPress={() => { deleteHandler(0) }}>Оплатить</Text>
+
     </View>
 
   );

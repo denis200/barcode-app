@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GoodsScreen from "./GoodsPage"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StoryScreen from './BuyStory'
+import ProfileScreen from './ProfilePage'
 
 import ScanScreen from "./ScanPage"
 
@@ -30,7 +31,7 @@ export default function GoodsTabNavScreen() {
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}>
-          <Tab.Screen  name="Профиль" component={GoodsScreen}  />
+          <Tab.Screen  name="Профиль" component={ProfileScreen}  />
           <Tab.Screen  name="Сканировать" component={ScanScreen}  />
           <Tab.Screen  name="Корзина" component={GoodsScreen} />
           <Tab.Screen  name="История покупок" component={StoryScreen} />
