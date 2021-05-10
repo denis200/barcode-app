@@ -1,11 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect, ActivityIndicator } from 'react-native';
 import Good from '../components/good';
+import { AuthContex } from '../components/contex'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
+
 
 export default function GoodsScreen({ route, navigation }) {
 

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, TouchableOpacity, Modal, Image, } from 'react-native';
+import { Text, View, StyleSheet, Button, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import SmallGood from '../components/goodSmall'
 
 export default function ScanScreen({ route, navigation }) {
+  const [isLoading, setIsLoading] = useState(true);
+
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [text, setText] = useState("")
@@ -24,6 +26,7 @@ export default function ScanScreen({ route, navigation }) {
   const GetGoodInfo = (barcode) => {
     fetch(`https://qrcodeback.azurewebsites.net/api/ProductQrcode?QR=${barcode}`)
       .then((response) => {
+        setIsLoading(true)
         return response.json();
       })
       .then((data) => {
@@ -38,6 +41,7 @@ export default function ScanScreen({ route, navigation }) {
     setScanned(true);
     setText(data);
     //alert(`Ваш штрихкод: ${data}. Тип штрихкода - ${type}`);
+
     GetGoodInfo(data)
   };
 
@@ -58,6 +62,7 @@ export default function ScanScreen({ route, navigation }) {
       {scanned && <TouchableOpacity style={styles.againButton} onPress={() => { setScanned(false) }} >
         <Text style={{ textAlign: 'center', color: '#fff' }} >Нажмите,чтобы отсканировать снова</Text>
       </TouchableOpacity >}
+
       <Modal transparent={true} visible={modalVisible} style={styles.modal}>
         <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
           <View style={styles.modal}>
