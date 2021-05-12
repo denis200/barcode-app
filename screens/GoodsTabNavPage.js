@@ -4,8 +4,23 @@ import GoodsScreen from "./GoodsPage"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StoryScreen from './BuyStory'
 import ProfileScreen from './ProfilePage'
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import ScanScreen from "./ScanPage"
+import CreditCardScreen from './CreditCardPage'
+import UserDataScreen from './UserContactData'
+
+const ProfileStack = createStackNavigator();
+
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Профиль" component={ProfileScreen} />
+      <ProfileStack.Screen name="Личная информация" component={UserDataScreen} />
+      <ProfileStack.Screen name="Банковские карты" component={CreditCardScreen} />
+    </ProfileStack.Navigator>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +46,7 @@ export default function GoodsTabNavScreen() {
         return <Ionicons name={iconName} size={size} color={color} />;
       },
     })}>
-      <Tab.Screen name="Профиль" component={ProfileScreen} />
+      <Tab.Screen name="Профиль" component={ProfileStackScreen} />
       <Tab.Screen name="Сканировать" component={ScanScreen} />
       <Tab.Screen name="Корзина" component={GoodsScreen} />
       <Tab.Screen name="История покупок" component={StoryScreen} />

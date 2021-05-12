@@ -5,11 +5,15 @@ import { Avatar } from 'react-native-elements';
 import { AuthContex } from '../components/contex'
 
 
+
+
 export default function ProfileScreen({ navigation }) {
+
     const { signOut } = React.useContext(AuthContex)
     return (
+
         <View style={{ backgroundColor: "#fff", height: '100%' }}>
-            <View style={{ flexDirection: 'row', marginTop: 65 }}>
+            <View style={{ flexDirection: 'row', marginTop: 30 }}>
                 <View style={{ marginLeft: 30 }}>
                     <Avatar
                         size="large"
@@ -28,14 +32,14 @@ export default function ProfileScreen({ navigation }) {
                 </View>
             </View>
             <View style={{ marginTop: 40, }}>
-                <TouchableOpacity style={{ paddingVertical: 10, }}>
-                    <Text style={{ textAlign: 'center', fontSize: 25 }}>Пункт меню 1</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate('Личная информация') }} style={{ paddingVertical: 10, }}>
+                    <Text style={{ textAlign: 'center', fontSize: 25 }}>Личная информация</Text>
                 </TouchableOpacity>
                 <Image source={require('../images/stick.jpg')} style={{
                     marginHorizontal: 20, marginTop: 15,
                 }}></Image>
-                < TouchableOpacity style={{ paddingVertical: 10, marginTop: 10, }}>
-                    <Text style={{ textAlign: 'center', fontSize: 25 }}>Пункт меню 2</Text>
+                < TouchableOpacity onPress={() => { navigation.navigate('Банковские карты') }} style={{ paddingVertical: 10, marginTop: 10, }}>
+                    <Text style={{ textAlign: 'center', fontSize: 25 }}>Банковские карты</Text>
                 </TouchableOpacity>
 
             </View>
