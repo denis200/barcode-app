@@ -9,15 +9,26 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ScanScreen from "./ScanPage"
 import CreditCardScreen from './CreditCardPage'
 import UserDataScreen from './UserContactData'
+import AdressScreen from './AdressMapPage'
+import PayScreen from './PayPage'
 
 const ProfileStack = createStackNavigator();
 
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator initialRouteName='Профиль'>
       <ProfileStack.Screen name="Профиль" component={ProfileScreen} />
       <ProfileStack.Screen name="Личная информация" component={UserDataScreen} />
-      <ProfileStack.Screen name="Банковские карты" component={CreditCardScreen} />
+      <ProfileStack.Screen name="Адреса магазинов" component={AdressScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+function GoodsStackScreen() {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false, }}>
+      <ProfileStack.Screen name="Корзина" component={GoodsScreen} />
+      <ProfileStack.Screen name="Оплата" component={PayScreen} />
+      <ProfileStack.Screen name="Карта" component={CreditCardScreen} />
     </ProfileStack.Navigator>
   );
 }
@@ -48,7 +59,7 @@ export default function GoodsTabNavScreen() {
     })}>
       <Tab.Screen name="Профиль" component={ProfileStackScreen} />
       <Tab.Screen name="Сканировать" component={ScanScreen} />
-      <Tab.Screen name="Корзина" component={GoodsScreen} />
+      <Tab.Screen name="Корзина" component={GoodsStackScreen} />
       <Tab.Screen name="История покупок" component={StoryScreen} />
     </Tab.Navigator>
   )

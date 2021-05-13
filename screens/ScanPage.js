@@ -12,6 +12,7 @@ export default function ScanScreen({ route, navigation }) {
   const [scanned, setScanned] = useState(false);
   const [text, setText] = useState("")
   const [Name, setName] = useState("")
+  const [picture, setPicture] = useState("")
   const [Price, setPrice] = useState(0)
   const [barcode, setBarcode] = useState("")
   const [modalVisible, setVisible] = useState(false)
@@ -32,6 +33,7 @@ export default function ScanScreen({ route, navigation }) {
       .then((data) => {
         setName(data.name)
         setPrice(data.price)
+        setPicture(data.picture)
         setBarcode(data.qrcode)
         setVisible(true)
       });
@@ -70,7 +72,7 @@ export default function ScanScreen({ route, navigation }) {
               <Text style={{ textAlign: 'center', color: '#fff' }}>Закрыть</Text>
             </TouchableOpacity>
             <View style={{ alignItems: 'center' }}>
-              <Image source={require('../images/prosto.jpg')} style={styles.image}></Image>
+              <Image style={styles.image} source={{ uri: `data:image/png;base64,${picture}` }} ></Image>
             </View>
             <View>
               <Text style={{ fontSize: 20, marginLeft: 20, }}>{Name}</Text>
@@ -102,7 +104,7 @@ export default function ScanScreen({ route, navigation }) {
                 {arr.map(good => { return <SmallGood price={good.price}></SmallGood> })}
               </ScrollView>
             </View>
-            <TouchableOpacity onPress={() => { navigation.navigate('Корзина', { data: { Name, Price, barcode, quantity } }), setVisible(false), setQuantity(1) }} style={styles.addButton}>
+            <TouchableOpacity onPress={() => { navigation.navigate('Корзина', { screen: 'Корзина', params: { data: { Name, Price, picture, barcode, quantity } } }), setVisible(false), setQuantity(1) }} style={styles.addButton}>
               <Text style={{ textAlign: 'center', paddingVertical: 11, color: '#fff', fontSize: 17 }}>Добавить</Text>
             </TouchableOpacity>
 
@@ -124,6 +126,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 200,
+    width: 200,
     resizeMode: 'contain'
 
   },

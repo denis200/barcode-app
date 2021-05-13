@@ -23,7 +23,7 @@ const Good = (props) => {
             renderRightActions={rightSwipe}
         >
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                <Image source={props.image} style={styles.good}></Image>
+                <Image source={{ uri: props.image }} style={styles.good}></Image>
                 <View >
                     <View style={{ marginTop: 10, width: '80%' }}>
                         <Text style={{ marginTop: 4, fontSize: 18, marginLeft: 20, }}>{props.name}</Text>
@@ -32,7 +32,7 @@ const Good = (props) => {
                         <Ionicons onPress={props.handle1Delete} name={'remove-circle-outline'} size={30}></Ionicons>
                         <Text style={{ fontSize: 18, marginTop: 3 }}> {props.quantity} шт </Text>
                         <Ionicons onPress={props.handleAdd1} name={'add-circle-outline'} size={30}></Ionicons>
-                        <Text style={{ fontSize: 20, color: '#000000', marginTop: 3, marginLeft: 40 }}>{props.price}</Text>
+                        <Text style={{ fontSize: 20, color: '#000000', marginTop: 3, marginLeft: 40 }}>{props.price.toFixed(2)}</Text>
                     </View>
 
                 </View>

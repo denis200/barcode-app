@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect, ActivityIndicator, Alert } from 'react-native';
 import Good from '../components/good';
 import { AuthContex } from '../components/contex'
 
@@ -19,11 +19,13 @@ export default function GoodsScreen({ route, navigation }) {
   const addGood = (data) => {
     let isFind = goods.find(good => good.code === data.barcode)
 
+
+
     if (isFind === undefined) {
       setGoods(prev => [...prev, {
         name: data.Name,
         price: data.Price,
-        image: require('.././images/prosto.jpg'),
+        image: data.picture,
         code: data.barcode,
         quantity: data.quantity,
       }])
@@ -51,11 +53,6 @@ export default function GoodsScreen({ route, navigation }) {
     }
   }
 
-  const findcode = (code) => {
-    goods.map(obj => (obj.code === code ? (addItem(obj.quantity, obj.name, obj.price)) : obj));
-    setFound(true)
-    alert(`Я тут ----- ${isFound}`)
-  }
 
   const deleteItem = (code, price, quantity) => {
     const arr = [...goods]
@@ -75,7 +72,18 @@ export default function GoodsScreen({ route, navigation }) {
     setSum(sum - price)
 
   };
+
+  const goPay = (goods) => {
+    if (goods !== []) {
+      navigation.navigate('Оплата', { data: goods })
+    } else {
+      alert('В вашей корзине нет товаров!')
+    }
+
+  }
+
   React.useEffect(() => {
+
     if (route.params?.data) {
       addGood(route.params?.data)
     }
@@ -90,8 +98,8 @@ export default function GoodsScreen({ route, navigation }) {
       <View style={{ height: '42%' }}>
         <ScrollView style={{ marginTop: 20, marginHorizontal: 30, }}>
           {goods.map(good => {
-            return <Good key={good.code} name={good.name} price={good.price} image={good.image} quantity={good.quantity}
-              handleAdd1={() => addItem(good.quantity, good.code, good.price)} handle1Delete={() => delete1Item(good.quantity, good.name, good.code, good.price)}
+            return <Good key={good.code} name={good.name} price={good.price} image={`data:image/png;base64,${good.image}`} quantity={good.quantity}
+              handleAdd1={() => addItem(good.quantity, good.code, good.price, 1)} handle1Delete={() => delete1Item(good.quantity, good.name, good.code, good.price)}
               handleDelete={() => deleteItem(good.code, good.price, good.quantity)} ></Good>
           })}
         </ScrollView>
@@ -102,7 +110,7 @@ export default function GoodsScreen({ route, navigation }) {
         <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
         <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
       </View>
-      <Text style={styles.payButton} onPress={() => { deleteHandler(0) }}>Оплатить</Text>
+      <Text style={styles.payButton} onPress={() => { goods[0] ? navigation.navigate('Оплата', { data: goods }) : Alert.alert('Ошибка', 'Ваша корзина пуста') }}>Оплатить</Text>
 
     </View>
 

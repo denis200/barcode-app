@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from "./screens/HomePage"
@@ -14,7 +15,7 @@ import GoodsTabNavScreen from './screens/GoodsTabNavPage'
 const Stack = createStackNavigator();
 
 export default function App() {
-
+  const [token, setToken] = useState('')
   initialLoginState = {
     isLoading: true,
     userName: null,
@@ -55,28 +56,70 @@ export default function App() {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState)
 
   const authContex = React.useMemo(() => ({
-    signIn: async (userName, password) => {
+    signIn: (userName, password) => {
       let userToken;
       userToken = null
-      if (userName == 'user' && password == 'pass') {
+      fetch(`http://qrcodeback.azurewebsites.net/token?username=${userName}&password=${password}`, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+      }).then((res) => {
 
+        if (res.ok && res.status === 200) {
+          return res.json()
+        }
+      }).then((data) => {
         try {
-          userToken = 'qwerty'
-          await AsyncStorage.setItem('userToken', userToken)
+          //alert(`${data}`)
+          if (data) {
+            userToken = data.access_token
+            //alert(`${userToken}`)
+            AsyncStorage.setItem('userToken', 'Bearer ' + userToken);
+
+            fetch(`http://qrcodeback.azurewebsites.net/api/User?`, {
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + userToken,
+              },
+            }).then((res) => {
+              alert(`${res.status}`)
+              alert(`${'Bearer ' + userToken}`)
+              return res.json();
+
+            }).then((data) => {
+              if (data) {
+                // alert(`data is ${JSON.stringify(data)}`)
+                try {
+                  AsyncStorage.setItem('user', JSON.stringify(data));
+
+                } catch (error) {
+                  //  alert(`${JSON.stringify(error)}`)
+                }
+                dispatch({ type: 'LOGIN', id: userName, token: token })
+              }
+
+            })
+
+          }
+
         } catch (e) {
           alert(e)
         }
-      }
-      alert(`user token ${userToken}`)
-      dispatch({ type: 'LOGIN', id: userName, token: userToken })
+
+
+
+      })
     },
-    signOut: async () => {
+    signOut: () => {
       try {
-        userToken = await AsyncStorage.removeItem('userToken')
+        AsyncStorage.removeItem('userToken');
+        AsyncStorage.removeItem('user');
       } catch (e) {
-        alert(e)
+        console.log(e);
       }
-      dispatch({ type: 'LOGOUT' })
+      dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
       setUserToken('qwer')
@@ -93,7 +136,8 @@ export default function App() {
       } catch (e) {
         alert(e)
       }
-      //alert(`user token ${userToken}`)
+
+      //alert(`user token ${ userToken } `)
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
     }, 1000)
   }, [])

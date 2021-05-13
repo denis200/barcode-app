@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { useEffect } from 'react'
 import { Button, StyleSheet, View, Text, TouchableOpacity, Icon } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { AuthContex } from '../components/contex'
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ route, navigation }) {
 
   const [data, setData] = React.useState({
     username: '',
@@ -48,7 +49,7 @@ export default function LoginScreen({ navigation }) {
       <TextInput placeholder="Пароль" maxLength={25} autoCorrect={false} secureTextEntry={true} style={styles.inputPass} onChangeText={(val) => handlePasswordChange(val)}></TextInput>
 
       <TouchableOpacity style={styles.buttonAuth}>
-        <Text onPress={() => { loginHandle(data.username, data.password) }} style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Войти</Text>
+        <Text onPress={() => loginHandle(data.username, data.password)} style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Войти</Text>
       </TouchableOpacity>
     </View>
   )
