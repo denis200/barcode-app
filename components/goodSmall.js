@@ -7,7 +7,7 @@ const SmallGood = (props) => {
     return (
         <View>
             <View style={{ width: 100, height: 100, alignItems: 'center' }}>
-                <Image source={require('../images/prosto.jpg')} style={{
+                <Image source={require('../images/3267835H.jpg')} style={{
                     width: 88,
                     height: 88,
 

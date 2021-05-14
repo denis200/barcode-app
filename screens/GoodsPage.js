@@ -5,6 +5,7 @@ import Good from '../components/good';
 import { AuthContex } from '../components/contex'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { set } from 'react-hook-form';
 
 const Tab = createBottomTabNavigator();
 
@@ -75,7 +76,7 @@ export default function GoodsScreen({ route, navigation }) {
 
   const goPay = (goods) => {
     if (goods !== []) {
-      navigation.navigate('Оплата', { data: goods })
+      navigation.navigate('Оплата', { par: { data: goods, sum: sum } })
     } else {
       alert('В вашей корзине нет товаров!')
     }
@@ -89,6 +90,14 @@ export default function GoodsScreen({ route, navigation }) {
     }
 
   }, [route.params?.data]);
+
+  React.useEffect(() => {
+    setCount(0)
+    setSum(0)
+    setGoods([])
+
+
+  }, [route.params?.isPayed]);
   return (
     <View style={styles.screen}>
       <View>
@@ -110,7 +119,7 @@ export default function GoodsScreen({ route, navigation }) {
         <Text style={{ fontSize: 25, marginLeft: 30, flexGrow: 1 }}>Итого:</Text>
         <Text style={{ fontSize: 25 }}>{sum.toFixed(2)} руб.</Text>
       </View>
-      <Text style={styles.payButton} onPress={() => { goods[0] ? navigation.navigate('Оплата', { data: goods }) : Alert.alert('Ошибка', 'Ваша корзина пуста') }}>Оплатить</Text>
+      <Text style={styles.payButton} onPress={() => { goods[0] ? navigation.navigate('Оплата', { data: goods, sum: sum }) : Alert.alert('Ошибка', 'Ваша корзина пуста') }}>Оплатить</Text>
 
     </View>
 

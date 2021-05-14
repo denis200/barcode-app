@@ -16,7 +16,7 @@ export default function ScanScreen({ route, navigation }) {
   const [Price, setPrice] = useState(0)
   const [barcode, setBarcode] = useState("")
   const [modalVisible, setVisible] = useState(false)
-  const arr = [{ price: 20 }, { price: 30 }, { price: 20 }, { price: 30 }, { price: 20 }, { price: 30 }]
+  const arr = [{ image: '2013421H', price: 20 }, { image: '3267835H', price: 30 }, { image: '3356983H', price: 20 }, { image: '3364341H', price: 30 }, { image: '3382555H', price: 20 }, { image: '3390380H', price: 30 }]
   const [quantity, setQuantity] = useState(1)
   useEffect(() => {
     (async () => {
@@ -66,6 +66,7 @@ export default function ScanScreen({ route, navigation }) {
       </TouchableOpacity >}
 
       <Modal transparent={true} visible={modalVisible} style={styles.modal}>
+
         <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
           <View style={styles.modal}>
             <TouchableOpacity onPress={() => { setVisible(false) }} style={styles.closeModal}>
@@ -79,7 +80,7 @@ export default function ScanScreen({ route, navigation }) {
             </View>
             <View style={{ flexDirection: 'row', marginLeft: 20, marginTop: 8, }}>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 24, }}>{Price}</Text>
+                <Text style={{ fontSize: 24, }}>{Price.toFixed(2)}</Text>
               </View>
               <View style={{ flexDirection: 'row', flex: 1, }}>
                 <Ionicons onPress={() => { quantity === 1 ? setQuantity(1) : setQuantity(quantity - 1) }} name={'remove-circle-outline'} size={30}></Ionicons>
@@ -93,7 +94,7 @@ export default function ScanScreen({ route, navigation }) {
             </View>
             <View>
               <ScrollView horizontal={true} style={{ height: '17%' }}>
-                {arr.map(good => { return <SmallGood price={good.price}></SmallGood> })}
+                {arr.map(good => { return <SmallGood image={good.image} price={good.price}></SmallGood> })}
               </ScrollView>
             </View>
             <View>
@@ -101,7 +102,7 @@ export default function ScanScreen({ route, navigation }) {
             </View>
             <View>
               <ScrollView horizontal={true} style={{ height: '17%' }}>
-                {arr.map(good => { return <SmallGood price={good.price}></SmallGood> })}
+                {arr.map(good => { return <SmallGood image={good.image} price={good.price}></SmallGood> })}
               </ScrollView>
             </View>
             <TouchableOpacity onPress={() => { navigation.navigate('Корзина', { screen: 'Корзина', params: { data: { Name, Price, picture, barcode, quantity } } }), setVisible(false), setQuantity(1) }} style={styles.addButton}>
@@ -110,6 +111,7 @@ export default function ScanScreen({ route, navigation }) {
 
           </View>
         </View>
+
 
       </Modal>
     </View>

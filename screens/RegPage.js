@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, CheckBox, TouchableOpacity } from 'react-native';
+import { useForm } from 'react-hook-form';
 
 
 
 export default function RegScreen({ navigation }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [birth, setBirth] = useState('')
-  const [pass, setPass] = useState('')
-
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [birth, setBirth] = useState("")
+  const [pass, setPass] = useState("")
 
   const handleNameChange = (val) => {
     setName(val)
@@ -28,19 +28,20 @@ export default function RegScreen({ navigation }) {
     setPhone(val)
   }
   const Registrarion = () => {
-    const userdata = {
-      name: name,
-      e_mail: email,
-      br_day: birth,
-      password: pass,
-      tel: phone,
-    }
     fetch(`http://qrcodeback.azurewebsites.net/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
       },
-      body: userdata.toString()
+
+      body: JSON.stringify({
+        name: name,
+        e_mail: email,
+        br_day: birth,
+        password: pass,
+        tel: phone,
+      }
+      )
     })
   }
 
@@ -48,17 +49,17 @@ export default function RegScreen({ navigation }) {
   return (
     <View>
       <Text style={{ textAlign: 'center', marginTop: '15%', fontSize: 25, marginBottom: 20, }}>Регистрация</Text>
-      <TextInput onChange={(val) => handleNameChange(val)} placeholder="Имя" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
-      <TextInput onChange={(val) => handleBirthChange(val)} placeholder="Дата Рождения" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
-      <TextInput onChange={(val) => handleEmailChange(val)} placeholder="Email" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
-      <TextInput onChange={(val) => handlePhoneChange(val)} placeholder="Телефон" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
-      <TextInput onChange={(val) => handlePasswordChange(val)} secureTextEntry={true} placeholder="Пароль" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
+      <TextInput onChangeText={(val) => { handleNameChange(val) }} placeholder="Имя" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
+      <TextInput onChangeText={(val) => { handleBirthChange(val) }} placeholder="Дата Рождения" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
+      <TextInput onChangeText={(val) => { handleEmailChange(val) }} placeholder="Email" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
+      <TextInput onChangeText={(val) => { handlePhoneChange(val) }} placeholder="Телефон" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
+      <TextInput onChangeText={(val) => { handlePasswordChange(val) }} secureTextEntry={true} placeholder="Пароль" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
       <TextInput secureTextEntry={true} placeholder="Повторите пароль" maxLength={32} autoCorrect={false} style={styles.input}></TextInput>
       <View style={{ flexDirection: 'row', marginLeft: 25, marginTop: 30, }}>
         <CheckBox ></CheckBox>
         <Text style={{ fontSize: 16 }}>Даю согласие на обработку персональных данных</Text>
       </View>
-      <TouchableOpacity onPress={() => { navigation.navigate('Login'), Registrarion() }} style={styles.buttonReg}>
+      <TouchableOpacity onPress={() => { Registrarion(), navigation.navigate('Login') }} style={styles.buttonReg}>
         <Text style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Зарегистрироваться</Text>
       </TouchableOpacity>
     </View>

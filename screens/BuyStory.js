@@ -1,19 +1,26 @@
 import React from 'react';
 import { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ActivityIndicator, RefreshControl, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Good from '../components/good';
 import GoodHistory from '../components/goodHistory';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-community/async-storage'
+
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const Purchase = (props) => {
+
   const [showList, setShowList] = useState(false)
 
   const [name, setName] = useState('chevron-down-circle-outline')
   return (
     <View>
       <TouchableOpacity onPress={() => { showList ? (setShowList(false), setName('chevron-down-circle-outline')) : (setShowList(true), setName('chevron-up-circle-outline')) }} style={{ flexDirection: 'row', borderWidth: 2, borderColor: '#00aa00', paddingVertical: 10, marginTop: 10, marginHorizontal: 30, borderRadius: 14, }}>
-        <Text style={{ flex: 1, marginLeft: 20, fontSize: 16 }}>Покупка {props.date}  {props.timeDate}</Text>
+        <Text style={{ flex: 1, marginLeft: 20, fontSize: 16 }}>Покупка {props.date}  {props.timeDate} {props.time}</Text>
         <Ionicons style={{ marginRight: 20, }} name={name} size={25} />
       </TouchableOpacity>
       <View style={{ marginHorizontal: 30, marginTop: 1, }}>
@@ -32,39 +39,55 @@ const Purchase = (props) => {
 }
 
 export default function StoryScreen({ route, navigation }) {
+  const [refreshing, setRefreshing] = React.useState(false);
   const [history, setHistory] = useState([])
-  const [isFirst, setFirst] = useState(true)
+  const [userid, setUserId] = useState(1)
+  const [isClear, setIsClear] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const GetPurchaseHistory = () => {
-    fetch(`https://qrcodeback.azurewebsites.net/api/History?ID=6`, {
+    AsyncStorage.getItem('id', (err, result) => {
+      if (result) {
+        fetch(`https://qrcodeback.azurewebsites.net/api/History?id=${result}`, {
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setHistory(data)
+            setIsLoading(false)
+            setRefreshing(false)
+          })
+      }
     })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        setHistory(data)
-        setIsLoading(false)
-      })
   }
 
+
   React.useEffect(() => {
-
     GetPurchaseHistory()
+  }, []);
 
-
-
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => { GetPurchaseHistory(userid) });
   }, []);
 
   return (
     <View style={{ backgroundColor: '#fff' }}>
       <Text style={{ textAlign: 'center', fontSize: 24, marginTop: 50, }}>История покупок:</Text>
 
-      <ScrollView style={{ height: '88%', marginTop: 25, }}>
-        {isLoading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size='large' color='#00aa00'></ActivityIndicator></View> : history.map(purch => { return <Purchase date={purch.timeDate} goods={purch.products} sum={purch.sum}></Purchase> })}
+      <ScrollView style={{ height: '86%', marginTop: 25, }} refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
+        {isLoading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size='large' color='#00aa00'></ActivityIndicator></View> : history.map(purch => { return <Purchase date={purch.timeDate} goods={purch.products} sum={purch.sum} time={purch.time}></Purchase> })}
       </ScrollView>
     </View>
+
+
 
   )
 }

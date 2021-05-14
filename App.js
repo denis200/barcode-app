@@ -9,7 +9,7 @@ import RegScreen from "./screens/RegPage"
 import { AuthContex } from './components/contex'
 import AsyncStorage from '@react-native-community/async-storage'
 import ScanScreen from "./screens/ScanPage"
-import { StyleSheet, Text, View, ScrollView, FlatList, Image, useEffect, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
 
 import GoodsTabNavScreen from './screens/GoodsTabNavPage'
 const Stack = createStackNavigator();
@@ -69,6 +69,8 @@ export default function App() {
 
         if (res.ok && res.status === 200) {
           return res.json()
+        } {
+          Alert.alert('Ошибка', 'Неправильный логин или пароль!')
         }
       }).then((data) => {
         try {
@@ -84,15 +86,18 @@ export default function App() {
                 'Authorization': 'Bearer ' + userToken,
               },
             }).then((res) => {
-              alert(`${res.status}`)
-              alert(`${'Bearer ' + userToken}`)
-              return res.json();
+              if (res.status === 200) {
+                return res.json();
+              } else {
+                Alert.alert('Ошибка', 'Истек срок действия токена!')
+              }
 
             }).then((data) => {
               if (data) {
                 // alert(`data is ${JSON.stringify(data)}`)
                 try {
                   AsyncStorage.setItem('user', JSON.stringify(data));
+                  AsyncStorage.setItem('id', JSON.stringify(data.id));
 
                 } catch (error) {
                   //  alert(`${JSON.stringify(error)}`)
@@ -116,6 +121,7 @@ export default function App() {
       try {
         AsyncStorage.removeItem('userToken');
         AsyncStorage.removeItem('user');
+        AsyncStorage.removeItem('id');
       } catch (e) {
         console.log(e);
       }

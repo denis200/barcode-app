@@ -34,6 +34,7 @@ export default function ProfileScreen({ navigation }) {
             const USer = JSON.parse(user)
             setName(USer.name)
             setEmail(USer.e_mail)
+            setLet(USer.name[0])
         }
     }, [user])
 
@@ -60,7 +61,7 @@ export default function ProfileScreen({ navigation }) {
                 </View>
             </View>
                 <View style={{ marginTop: 40, }}>
-                    <TouchableOpacity onPress={async () => { navigation.navigate('Личная информация') }} style={{ paddingVertical: 10, }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Личная информация', { user: user })} style={{ paddingVertical: 10, }}>
                         <Text style={{ textAlign: 'center', fontSize: 25 }}>Личная информация</Text>
                     </TouchableOpacity>
                     <Image source={require('../images/stick.jpg')} style={{
