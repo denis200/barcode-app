@@ -28,7 +28,7 @@ const Purchase = (props) => {
         {showList &&
           <View style={{ flexDirection: 'row', marginRight: 10, marginBottom: 20, marginTop: 10, }}>
             <Text style={{ fontSize: 21, marginLeft: 10, flexGrow: 1 }}>Итого:</Text>
-            <Text style={{ fontSize: 21 }}>{props.sum} руб.</Text>
+            <Text style={{ fontSize: 21 }}>{props.sum.toFixed(2)} руб.</Text>
           </View>}
 
       </View>
